@@ -55,6 +55,8 @@ def login():
             login_user(user)
             flash('Login success.')
             return redirect(url_for('index'))
+        flash('Invalid username or password.')
+        return redirect(url_for('login'))
     return render_template('login.html')
 
 
@@ -90,17 +92,17 @@ def index():
 @app.route('/movies/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit(id):
-    movie = Movie.query.get_or_404(id)
+    movie = Movie.query.get_or_404(id) 
     if request.method == 'POST':
         title = request.form['title']
         year = request.form['year']
         if not title or not year or len(year) != 4 or len(title) > 60:
             flash('Invalid input.')
-            return redirect(url_for('edit'), id=id)
+            return redirect(url_for('edit', id=id))
         movie.title = title
         movie.year = year
         db.session.commit()
-        flash('Item updated')
+        flash('Item updated.')
         return redirect(url_for('index'))
     return render_template('edit.html', movie=movie)
 
@@ -132,19 +134,20 @@ def test_url_for():
     print(url_for('test_url_for', num=2))
     return 'Test page'
 
-@app.route('/settings',methods=['GET','POST'])
+
+@app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
-  if request.method == 'POST':
-    name = request.form['name']
-    if not name or len(name) > 20:
-      flash('Invalid input.')
-      return redirect(url_for('settings'))
-    current_user.name = name
-    db.session.commit()
-    flash('Setttings updated.')
-    return redirect(url_for('index'))
-  return render_template('settings.html')
+    if request.method == 'POST':
+        name = request.form['name']
+        if not name or len(name) > 20:
+            flash('Invalid input.')
+            return redirect(url_for('settings'))
+        current_user.name = name
+        db.session.commit()
+        flash('Settings updated.')
+        return redirect(url_for('index'))
+    return render_template('settings.html')
 
 
 class User(db.Model, UserMixin):
@@ -173,7 +176,7 @@ def initdb(drop):
     if drop:
         db.drop_all()
     db.create_all()
-    click.echo('Initialized databases.')
+    click.echo('Initialized database.')
 
 
 @app.cli.command()
