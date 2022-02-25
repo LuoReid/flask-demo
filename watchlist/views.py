@@ -1,8 +1,8 @@
 from flask import Flask, escape, redirect, request, url_for, render_template, flash
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user, login_required
 
-from watchlist import app,db
-from watchlist.models import User,Movie
+from watchlist import app, db
+from watchlist.models import User, Movie
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -56,7 +56,7 @@ def index():
 @app.route('/movies/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit(id):
-    movie = Movie.query.get_or_404(id) 
+    movie = Movie.query.get_or_404(id)
     if request.method == 'POST':
         title = request.form['title']
         year = request.form['year']

@@ -1,4 +1,4 @@
-from watchlist import views, errors, commands
+
 import os
 import sys
 
@@ -37,3 +37,5 @@ def inject_user():
     from watchlist.models import User
     user = User.query.first()
     return dict(user=user)
+
+from watchlist import views, errors, commands
